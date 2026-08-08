@@ -7,7 +7,7 @@
 | FastAPI backend + `products.csv` | Done | `app/api.py` with list/receive/sell/low-stock; CSV persistence |
 | Conversation CSV logging | Done | Append-only `conversation_log.csv` with four fields (gitignored) |
 | Agent (`agent.py`) | Done | Groq tools, session memory, `MAX_TRIES = 3` |
-| Testing / validation | Pending | Needs real `GROQ_API_KEY` in local `.env` for live E2E |
+| Testing / validation | Done | Live rubric run: **10/10** (see `memory-bank/evaluate.md`) |
 
 ## Checklist
 
@@ -19,7 +19,7 @@
 - [x] FastAPI backend & `products.csv`
 - [x] CSV conversation logging (`conversation_log.csv`, four fields)
 - [x] AI agent development (Groq, max 3 tries)
-- [ ] System testing & validation (manual; paste API key first)
+- [x] System testing & validation (rubric live run 10/10)
 
 ## How to run
 

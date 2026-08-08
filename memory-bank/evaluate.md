@@ -15,19 +15,20 @@
 
 ---
 
-## Evaluation results (2026-08-07)
+## Evaluation results (live run)
 
-**Score: 10 / 10** (gaps closed: `products.csv` + `conversation_log.csv`)
+**Score: 10 / 10**
 
 | Criterion | Result | Evidence |
 |-----------|--------|----------|
-| Four FastAPI endpoints | **Pass** | `GET /products`, `GET /products/low-stock`, `POST /products/receive`, `POST /products/sell` in [`app/api.py`](../app/api.py) |
-| Persist in `products.csv` | **Pass** | Inventory read/written via [`products.csv`](../products.csv); survives process restart |
-| Observe → Think → Act → Update → Repeat | **Pass** | Hand-coded loop in [`agent.py`](../agent.py) with `MAX_TRIES = 3` |
-| Tools with name/description/typed params | **Pass** | `TOOLS` definitions for list/receive/sell/low_stock |
-| Tool → correct API endpoint | **Pass** | `execute_tool` maps tool names to HTTP paths |
-| Inject tool/LLM result into history | **Pass** | Tool and assistant messages appended before the next Groq call |
-| `conversation_log.csv` + four fields | **Pass** | Append-only log with `author`, `content`, `tool_call`, `timestamp` |
-| Append-only across sessions | **Pass** | CSV opened in append mode; prior rows retained |
-| Multi-step interaction | **Pass** | In-memory `messages` reused across user turns |
-| No agent framework | **Pass** | `groq` + `requests` only; no LangChain/etc. |
+| Four required endpoints | **Pass** | GET /products -> 200; GET /products/low-stock -> 200; POST /products/receive -> 200; POST /products/sell -> 200 |
+| Products persisted in products.csv and survive restart | **Pass** | path=products.csv; written=True; reload_sees_product=True |
+| Agent loop Observe-Think-Act-Update-Repeat | **Pass** | handle_user_message contains Groq call, tool execution, message updates, and repeat loop |
+| Tools have names, descriptions, typed parameters | **Pass** | tools=['list_products', 'receive_stock', 'sell_stock', 'low_stock'] |
+| Agent calls correct API endpoint for each tool | **Pass** | execute_tool maps list/receive/sell/low_stock to matching paths |
+| LLM/tool result injected into conversation history | **Pass** | tool and assistant messages appended to messages before next iteration |
+| conversation_log.csv created with all four fields | **Pass** | file=conversation_log.csv; header=['author', 'content', 'tool_call', 'timestamp']; rows_logged=31 |
+| Log is append-only across sessions | **Pass** | open_mode_append=True; rows_before=45; rows_after=48 |
+| Multi-step interaction support | **Pass** | main() reuses the same messages list across user turns |
+| No agent framework; hand-coded loop | **Pass** | No banned frameworks in agent.py/requirements; custom loop present |
+
