@@ -1,0 +1,17 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.egg-info/
+.dist/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.idea/
+.vscode/
+conversation_history.csv
+*.log

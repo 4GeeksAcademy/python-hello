@@ -1,0 +1,29 @@
+{
+  "products": [
+    {
+      "name": "oat milk",
+      "quantity": 25,
+      "unit": "units"
+    },
+    {
+      "name": "alkaline baking soda",
+      "quantity": 33.0,
+      "unit": "bags"
+    },
+    {
+      "name": "bread flour",
+      "quantity": 60.0,
+      "unit": "kg"
+    },
+    {
+      "name": "vanilla extract",
+      "quantity": 5,
+      "unit": "liters"
+    },
+    {
+      "name": "chocolate chips",
+      "quantity": 15,
+      "unit": "bags"
+    }
+  ]
+}
