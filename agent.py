@@ -23,8 +23,9 @@ MAX_TRIES = 3
 API_BASE_URL = "http://127.0.0.1:8000"
 MODEL = "llama-3.3-70b-versatile"
 ROOT = Path(__file__).resolve().parent
-CSV_PATH = ROOT / "conversation_history.csv"
+CSV_PATH = ROOT / "conversation_log.csv"
 PLACEHOLDER_KEY = "your_api_key_here"
+LOG_FIELDS = ("author", "content", "tool_call", "timestamp")
 
 SYSTEM_PROMPT = (
     "You are an inventory assistant for Carla's Bakery Supplies. "
@@ -101,20 +102,20 @@ def _ensure_csv_header() -> None:
         return
     with CSV_PATH.open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(["session_id", "author", "content", "tool_call", "timestamp"])
+        writer.writerow(list(LOG_FIELDS))
 
 
 def log_event(
-    session_id: str,
     author: str,
     content: str,
     tool_call: str = "",
 ) -> None:
+    """Append one event to conversation_log.csv (author, content, tool_call, timestamp)."""
     _ensure_csv_header()
     timestamp = datetime.now(timezone.utc).isoformat()
     with CSV_PATH.open("a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow([session_id, author, content, tool_call, timestamp])
+        writer.writerow([author, content, tool_call, timestamp])
 
 
 def _http_request(method: str, path: str, payload: dict[str, Any] | None = None) -> str:
@@ -194,11 +195,10 @@ def _tool_calls_to_dict(message: Any) -> list[dict[str, Any]]:
 
 def handle_user_message(
     client: Groq,
-    session_id: str,
     messages: list[dict[str, Any]],
     user_text: str,
 ) -> str:
-    log_event(session_id, "user", user_text)
+    log_event("user", user_text)
     messages.append({"role": "user", "content": user_text})
 
     tool_rounds = 0
@@ -210,7 +210,7 @@ def handle_user_message(
         if not tool_calls:
             reply = (assistant_message.content or "").strip() or "(no response)"
             messages.append({"role": "assistant", "content": reply})
-            log_event(session_id, "agent", reply)
+            log_event("agent", reply)
             return reply
 
         tool_rounds += 1
@@ -232,7 +232,7 @@ def handle_user_message(
             except json.JSONDecodeError:
                 args = {}
             result = execute_tool(name, args)
-            log_event(session_id, "tool", result, tool_call=name)
+            log_event("tool", result, tool_call=name)
             messages.append(
                 {
                     "role": "tool",
@@ -247,7 +247,7 @@ def handle_user_message(
         "Please try again with a simpler ask."
     )
     messages.append({"role": "assistant", "content": fail_msg})
-    log_event(session_id, "agent", fail_msg)
+    log_event("agent", fail_msg)
     return fail_msg
 
 
@@ -285,10 +285,10 @@ def main() -> None:
             break
 
         try:
-            reply = handle_user_message(client, session_id, messages, user_text)
+            reply = handle_user_message(client, messages, user_text)
         except RuntimeError as exc:
             reply = str(exc)
-            log_event(session_id, "agent", reply)
+            log_event("agent", reply)
         print(f"Agent> {reply}")
 
 

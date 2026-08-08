@@ -8,7 +8,7 @@ Carla’s Bakery Supplies is losing money because inventory is hard to track acr
 
 The solution has two main parts:
 
-1. **REST API (FastAPI)** — Backend that owns inventory data stored in `data.json`. It supports listing products, registering sales/arrivals, updating stock, and related inventory operations.
+1. **REST API (FastAPI)** — Backend that owns inventory data stored in `products.csv`. It supports listing products, registering sales/arrivals, updating stock, and related inventory operations. Data survives server restarts.
 2. **AI Agent (`agent.py`)** — A Python script that sits between Carla and the API. It uses a **Groq** LLM so she can talk in plain language; the agent decides which API endpoints (tools) to call and replies conversationally.
 
 ```
@@ -21,44 +21,43 @@ User (natural language)
    FastAPI (app/api.py)
         │
         ▼
-     data.json
+    products.csv
 ```
 
 ## Agent loop and tool calling
 
-API endpoints are exposed to the LLM as **tools** (name, description, and parameters). The agent loop is:
+API endpoints are exposed to the LLM as **tools** (name, description, and parameters). The agent loop is Observe → Think → Act → Update → Repeat:
 
-1. Receive the user message.
-2. Decide which tool(s) to call based on intent.
-3. Execute the tool (HTTP request to the FastAPI API).
-4. Receive the tool output.
-5. Reply to the user in natural language.
+1. **Observe** — receive the user message.
+2. **Think** — Groq decides which tool(s) to call based on intent.
+3. **Act** — execute the tool (HTTP request to the FastAPI API).
+4. **Update** — inject the tool result into conversation history, then form a reply.
+5. **Repeat** — continue tool rounds as needed (hard-capped; see loop safety).
 
-`agent.py` keeps **session memory** so follow-up messages in the same run can refer to earlier context. Stopping and restarting `agent.py` starts a new session; older events remain in the conversation log file.
+`agent.py` keeps **session memory** so follow-up messages in the same run can refer to earlier context (multi-step interactions). Stopping and restarting `agent.py` starts a new session; older events remain in the conversation log file.
 
 ### Loop safety
 
 All retries and tool-calling rounds are hard-capped at **3** (`MAX_TRIES = 3`). No request path may loop indefinitely (Groq calls, HTTP to FastAPI, or tool rounds).
 
-## Conversation history
+## Conversation log
 
-Every loop event is appended to `conversation_history.csv` with:
+Every loop event is appended to `conversation_log.csv` with exactly four fields:
 
 | Field | Description |
 |-------|-------------|
-| `session_id` | Unique id for the session |
 | `author` | `user`, `agent`, or `tool` |
 | `content` | Message text or tool result |
-| `tool_call` | Tool name when applicable |
+| `tool_call` | Tool name when applicable (empty otherwise) |
 | `timestamp` | ISO 8601 date/time |
 
-The file is append-only; new sessions are written at the end. Runtime CSV is gitignored.
+The file is append-only; new sessions continue writing at the end. Runtime CSV is gitignored.
 
 ## Functional requirements
 
 - Understand conversational inventory phrases such as “we just received 30 units of oat milk” or “we sold 12 bags of alkaline baking.”
 - Answer questions like “what products are running low?” clearly and directly.
-- Support flexible product data: name, quantity, and units (e.g. kg, liters, units).
+- Support flexible product data: name, quantity, and units (e.g. kg, liters, units) in `products.csv`.
 - Feel like a natural conversation, not a form-driven UI.
 
 ## Environment and how to run
@@ -72,7 +71,7 @@ The file is append-only; new sessions are written at the end. Runtime CSV is git
 **Terminal 1 — API:**
 
 ```bash
-uvicorn app.api:app --reload
+python -m uvicorn app.api:app --reload
 ```
 
 **Terminal 2 — Agent:**
@@ -81,11 +80,11 @@ uvicorn app.api:app --reload
 python agent.py
 ```
 
-Use `Ctrl+C` to stop either process. Relaunching the agent opens a new session while prior history stays in `conversation_history.csv`.
+Use `Ctrl+C` to stop either process. Relaunching the agent opens a new session while prior history stays in `conversation_log.csv`.
 
 ## Key deliverables
 
-- FastAPI app in `app/api.py` backed by `data.json`
-- Conversation logging to `conversation_history.csv`
-- `agent.py` with Groq tool-calling, API integration, session memory, and max 3 tries
+- FastAPI app in `app/api.py` backed by `products.csv`
+- Conversation logging to `conversation_log.csv` (four fields)
+- `agent.py` with hand-coded Groq tool-calling loop, API integration, session memory, and max 3 tries
 - End-to-end checks with Carla-style natural language inputs

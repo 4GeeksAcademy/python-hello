@@ -13,5 +13,6 @@ build/
 .mypy_cache/
 .idea/
 .vscode/
+conversation_log.csv
 conversation_history.csv
 *.log

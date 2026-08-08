@@ -1,29 +1,34 @@
 {
   "products": [
     {
-      "name": "oat milk",
-      "quantity": 25,
-      "unit": "units"
-    },
-    {
-      "name": "alkaline baking soda",
-      "quantity": 33.0,
-      "unit": "bags"
-    },
-    {
-      "name": "bread flour",
-      "quantity": 60.0,
+      "name": "Baking Flour",
+      "quantity": 50.0,
       "unit": "kg"
     },
     {
-      "name": "vanilla extract",
-      "quantity": 5,
+      "name": "Baking Sugar",
+      "quantity": 20.0,
+      "unit": "kg"
+    },
+    {
+      "name": "Butter",
+      "quantity": 10.0,
+      "unit": "kg"
+    },
+    {
+      "name": "Eggs",
+      "quantity": 100.0,
+      "unit": "units"
+    },
+    {
+      "name": "Milk",
+      "quantity": 50.0,
       "unit": "liters"
     },
     {
-      "name": "chocolate chips",
-      "quantity": 15,
-      "unit": "bags"
+      "name": "Vanilla Extract",
+      "quantity": 5.0,
+      "unit": "liters"
     }
   ]
 }

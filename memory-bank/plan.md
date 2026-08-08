@@ -10,14 +10,14 @@
 ## Architecture
 
 ```
-User → agent.py (Groq + tools) → FastAPI (app/api.py) → data.json
+User → agent.py (Groq + tools) → FastAPI (app/api.py) → products.csv
                  ↓
-        conversation_history.csv
+        conversation_log.csv
 ```
 
 ## Secrets (local only)
 
-- `.gitignore` ignores `.env`, venvs, `__pycache__/`, and `conversation_history.csv`
+- `.gitignore` ignores `.env`, venvs, `__pycache__/`, and `conversation_log.csv`
 - Local `.env` with `GROQ_API_KEY=your_api_key_here` (user pastes real key manually)
 - Committed `.env.example` with the same placeholder
 
@@ -27,7 +27,7 @@ User → agent.py (Groq + tools) → FastAPI (app/api.py) → data.json
 
 ## 1. FastAPI backend — `app/api.py`
 
-- Inventory in `data.json`: `name`, `quantity`, `unit`
+- Inventory in `products.csv`: `name`, `quantity`, `unit`
 - Low-stock threshold: quantity `<= 10`
 - Endpoints:
   - `GET /products` — list all
@@ -38,9 +38,8 @@ User → agent.py (Groq + tools) → FastAPI (app/api.py) → data.json
 
 ## 2. Conversation logging
 
-- Append-only `conversation_history.csv`
-- Columns: `session_id`, `author` (`user`|`agent`|`tool`), `content`, `tool_call`, `timestamp` (ISO 8601)
-- New UUID `session_id` each agent process start
+- Append-only `conversation_log.csv`
+- Four columns: `author` (`user`|`agent`|`tool`), `content`, `tool_call`, `timestamp` (ISO 8601)
 
 ## 3. Agent — `agent.py`
 
@@ -72,4 +71,4 @@ python agent.py
 
 - Committing or pushing secrets
 - Changing Flask `server.py` boilerplate
-- Multi-location inventory beyond one shared `data.json`
+- Multi-location inventory beyond one shared `products.csv`
