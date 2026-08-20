@@ -1,0 +1,34 @@
+{
+  "products": [
+    {
+      "name": "Baking Flour",
+      "quantity": 50.0,
+      "unit": "kg"
+    },
+    {
+      "name": "Baking Sugar",
+      "quantity": 20.0,
+      "unit": "kg"
+    },
+    {
+      "name": "Butter",
+      "quantity": 10.0,
+      "unit": "kg"
+    },
+    {
+      "name": "Eggs",
+      "quantity": 100.0,
+      "unit": "units"
+    },
+    {
+      "name": "Milk",
+      "quantity": 50.0,
+      "unit": "liters"
+    },
+    {
+      "name": "Vanilla Extract",
+      "quantity": 5.0,
+      "unit": "liters"
+    }
+  ]
+}
