@@ -10,13 +10,13 @@ The most basic boilerplate to start a Python project at 4Geeks: start your very 
 
 Open this repository in GitHub Codespaces (or in VS Code with the Dev Containers extension). Everything is installed for you automatically:
 
-- Python 3.12
+- Python 3.15
 - [uv](https://docs.astral.sh/uv/), the package and project manager
 - The 4Geeks Student extension and the Python extensions for VS Code
 
 ### Option 2: Local setup
 
-Make sure you have Python 3.12 or newer installed. We strongly recommend [installing uv](https://docs.astral.sh/uv/getting-started/installation/), which can also install Python for you. Then run:
+Make sure you have Python 3.15 or newer installed. We strongly recommend [installing uv](https://docs.astral.sh/uv/getting-started/installation/), which can also install Python for you. Then run:
 
 ```bash
 $ uv sync
