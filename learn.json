@@ -4,12 +4,14 @@
     "es": "Plantilla Inicial de Python para Principiantes"
   },
   "description": {
-    "en": "This is a starter template for Python projects. It includes a basic folder structure, a sample Python file, and instructions to kickstart your project.",
-    "es": "Esta es una plantilla inicial para proyectos de Python. Incluye una estructura básica de carpetas, un archivo Python de ejemplo y instrucciones para iniciar tu proyecto."
+    "en": "This is a starter template for Python projects. It comes with a ready-to-use Dev Container (Python 3.15, uv and the 4Geeks Student extension), a sample Python file, and instructions to kickstart your project.",
+    "es": "Esta es una plantilla inicial para proyectos de Python. Incluye un Dev Container listo para usar (Python 3.15, uv y la extensión 4Geeks Student), un archivo Python de ejemplo e instrucciones para iniciar tu proyecto."
   },
-  "repository": "https://github.com/4geeksacademy/python-hello",
+  "repository": "https://github.com/4GeeksAcademy/python-hello",
   "preview": "",
   "projectType": "template",
   "difficulty": "beginner",
-  "technologies": ["Python"]
+  "technologies": [
+    "Python"
+  ]
 }
