@@ -1,0 +1,7 @@
+[project]
+name = "python-hello"
+version = "0.1.0"
+description = "4Geeks Academy Python starter template"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
